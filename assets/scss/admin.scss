@@ -1,0 +1,314 @@
+/**
+ * NXW Page Builder Admin SCSS
+ * Uses TailwindCSS via CDN for development
+ */
+
+// Custom admin styles
+.nxw-page-builder-wrap {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+// Override WordPress admin styles for our pages
+.nxw-page-builder-wrap .wrap {
+    margin: 0;
+}
+
+// Remove WordPress admin default padding
+.nxw-page-builder-wrap #wpcontent {
+    padding-left: 0;
+}
+
+// Loading states
+.nxw-loading {
+    opacity: 0.6;
+    pointer-events: none;
+    position: relative;
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 20px;
+        height: 20px;
+        margin: -10px 0 0 -10px;
+        border: 2px solid #3b82f6;
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: nxw-spin 0.6s linear infinite;
+    }
+}
+
+@keyframes nxw-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+// Custom Select Styling
+.nxw-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+    background-position: right 0.75rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+
+    &:focus {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%233b82f6' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+    }
+}
+
+// Form styles - Enhanced
+.nxw-page-builder-wrap {
+    input[type="text"],
+    input[type="number"],
+    input[type="email"],
+    input[type="url"],
+    select,
+    textarea {
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.9375rem;
+        line-height: 1.5rem;
+        transition: all 0.2s ease-in-out;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+        &:hover {
+            border-color: #9ca3af;
+        }
+
+        &:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+    }
+}
+
+// Button styles - Enhanced
+.nxw-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: white;
+    background-color: #2563eb;
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #1d4ed8;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        transform: translateY(-1px);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+    }
+}
+
+.nxw-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    background-color: white;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #f9fafb;
+        border-color: #9ca3af;
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.2);
+    }
+}
+
+.nxw-page-builder-wrap {
+    button:disabled,
+    .nxw-btn-primary:disabled,
+    .nxw-btn-secondary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none !important;
+    }
+}
+
+// Table enhancements
+.nxw-page-builder-wrap table tbody tr {
+    transition: background-color 0.15s ease-in-out;
+}
+
+// Smooth transitions
+.nxw-page-builder-wrap * {
+    transition-property: color, background-color, border-color, opacity, box-shadow, transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// WordPress admin compatibility
+#wpbody-content .nxw-page-builder-wrap {
+    padding: 20px;
+}
+
+// Custom scrollbar for better aesthetics
+.nxw-page-builder-wrap ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.nxw-page-builder-wrap ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.nxw-page-builder-wrap ::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+
+    &:hover {
+        background: #94a3b8;
+    }
+}
+
+// Drag and Drop Styles
+.nxw-page-builder-wrap {
+    [draggable="true"] {
+        cursor: move;
+        user-select: none;
+
+        &:active {
+            opacity: 0.6;
+        }
+    }
+
+    .drag-handle {
+        cursor: grab;
+
+        &:active {
+            cursor: grabbing;
+        }
+    }
+
+    .sortable-placeholder {
+        border: 2px dashed #3b82f6;
+        background-color: #eff6ff;
+        height: 100px;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .block-item.dragging {
+        opacity: 0.5;
+        transform: rotate(2deg);
+    }
+}
+
+// Blocks List with Sidebar
+.nxw-blocks-list-container {
+    .nxw-blocks-sidebar {
+        // Custom scrollbar for sidebar
+        &::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+
+            &:hover {
+                background: #94a3b8;
+            }
+        }
+    }
+
+    .nxw-block-card {
+        &:hover {
+            transform: translateY(-2px);
+        }
+    }
+
+    .nxw-block-preview {
+        position: relative;
+        
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: linear-gradient(to top, rgba(249, 250, 251, 0.95), transparent);
+            pointer-events: none;
+        }
+
+        .nxw-block-preview-content {
+            // Ensure preview doesn't break layout
+            * {
+                max-width: 100%;
+            }
+        }
+    }
+}
+
+// Preview Modal
+#nxw-block-preview-modal {
+    .nxw-preview-content {
+        // Style preview content in modal
+        * {
+            max-width: 100%;
+        }
+
+        // Ensure proper spacing
+        > * {
+            margin-bottom: 1rem;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    // Tab styles
+    .nxw-modal-tab {
+        transition: all 0.2s ease-in-out;
+        
+        &:hover {
+            color: #374151;
+        }
+        
+        &.active {
+            color: #9333ea;
+            border-color: #9333ea;
+        }
+    }
+
+    // Attributes list styles
+    #nxw-attributes-list {
+        .font-mono {
+            font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+        }
+    }
+}
+

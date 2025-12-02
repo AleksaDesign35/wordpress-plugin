@@ -1,0 +1,112 @@
+/**
+ * Hero Block Styles
+ * BEM naming convention: .hero__element--modifier
+ * Uses .container class for width management
+ */
+
+@use '_blocks-common.scss' as *;
+
+.hero {
+    position: relative;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.1) 100%);
+        z-index: 1;
+    }
+
+    > * {
+        position: relative;
+        z-index: 2;
+    }
+
+    // Alignment modifiers - dynamically added
+    &--align-left {
+        justify-content: flex-start;
+    }
+
+    &--align-center {
+        justify-content: center;
+    }
+
+    &--align-right {
+        justify-content: flex-end;
+    }
+
+    // Padding modifiers - dynamically added
+    &--padding-small {
+        padding: 2rem 0;
+    }
+
+    &--padding-medium {
+        padding: 4rem 0;
+    }
+
+    &--padding-large {
+        padding: 6rem 0;
+    }
+}
+
+.hero__container {
+    width: 100%;
+    max-width: 100%;
+}
+
+.hero__content {
+    max-width: 800px;
+    width: 100%;
+}
+
+.hero__title {
+    @include nxw-responsive-font(2rem, 3rem, 4rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 1rem 0;
+}
+
+.hero__subtitle {
+    @include nxw-responsive-font(1.125rem, 1.25rem, 1.5rem);
+    line-height: 1.6;
+    margin: 0 0 2rem 0;
+    opacity: 0.95;
+}
+
+.hero__actions {
+    margin-top: 2rem;
+    
+    // Remove default nav styling for cleaner appearance
+    padding: 0;
+    margin: 2rem 0 0 0;
+    list-style: none;
+}
+
+.hero__button {
+    @include nxw-button-base;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+    &:hover {
+        @include nxw-button-hover;
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+    .hero {
+        min-height: 300px;
+    }
+}
+

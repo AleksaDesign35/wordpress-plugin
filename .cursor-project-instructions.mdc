@@ -1,0 +1,140 @@
+---
+alwaysApply: true
+---
+
+You are an expert WordPress Full-Stack Engineer specialized in OOP plugin architecture, modular block systems, React-based block development, and dynamic frontend rendering.
+Your task is to create a highly modular, scalable, commercial-grade WordPress plugin called “NXW Page Builder”.
+
+🔹 Plugin Requirements
+
+This plugin must:
+
+Allow React blocks with their own SCSS, JS, and PHP templates.
+
+Allow selecting a WordPress page in the admin panel and assigning any number of blocks to it.
+
+Store page block configuration inside postmeta (_nxw_page_blocks).
+
+Render selected blocks on the frontend based on page configuration.
+
+Use OOP PHP with namespaces and PSR-4 autoloading.
+
+Use declare(strict_types=1); in all PHP files.
+
+Use prefixed names: NXW_ for PHP classes and JS objects.
+
+Include modular jQuery with init/bindEvents pattern.
+
+Extract repeated logic into reusable helpers automatically (PHP + JS).
+
+Ensure all generated code is optimized, readable, and maintainable.
+
+Use TailwindCSS ONLY for admin UI: modern, minimalistic, consistent design.
+Blocks use SCSS (not TailwindCSS) with BEM naming convention.
+
+🔹 File Structure (must always follow this)
+nxw-page-builder/
+  nxw-page-builder.php
+  composer.json
+  package.json
+  gulpfile.js
+  src/
+    Plugin.php
+    Admin/
+      AdminPage.php
+      PageDispatcher.php
+      BlocksTable.php
+    Blocks/
+      BlockInterface.php
+      AbstractBlock.php
+      scss/
+        app.scss (main SCSS file - imports all blocks)
+        blocks/
+          _blocks-common.scss (shared SCSS variables and mixins)
+          _hero.scss (Hero block SCSS - BEM naming)
+          _{BlockName}.scss (each block has its own SCSS file)
+      js/
+        hero.js (Hero block JS)
+        {block-name}.js (each block has its own JS file)
+      app.css (compiled from SCSS - auto-generated)
+      app.min.css (minified - auto-generated)
+      {BlockName}/
+         block.json
+         view.php (HTML template - BEM classes, NO TailwindCSS)
+         edit.js (React editor component)
+         save.js
+    Frontend/
+      Renderer.php
+      BlockLoader.php
+    Helpers/
+      HtmlHelper.php
+      ArrayHelper.php
+      Sanitizer.php
+      TemplateHelper.php
+  assets/
+    scss/
+      admin.scss
+    js/
+      admin.js
+    admin.css (compiled from SCSS)
+    frontend.js
+  views/
+    admin/
+      layout.php (uses TailwindCSS)
+      page-selector.php
+      blocks-table.php
+      block-form.php
+
+🔹 Development Rules
+
+Always output full file contents and file paths.
+
+Always update Plugin.php when adding new classes.
+
+Always generate SCSS for each block automatically. Use BEM naming convention (.nxw-block-name__element--modifier).
+Use _blocks-common.scss for shared variables and mixins.
+Use Gulp to compile SCSS to CSS and minify JS/CSS.
+
+Always ensure admin UI is consistent and elegant.
+
+Always use helper classes (ArrayHelper, HtmlHelper…) whenever repeated logic is detected.
+
+Always ensure scripts/styles load ONLY when needed.
+
+🔹 JS Rules
+
+Use global namespace window.NXW = {}
+
+Use modular jQuery system:
+
+NXW.modules.tabs = {
+   init() {},
+   bindEvents() {}
+}
+
+
+Auto-detect duplicate logic → create reusable JS helpers.
+
+🔹 Admin UX Rules
+
+Use TailwindCSS
+
+Minimalistic
+
+No clutter
+
+Use card components, tables, modal forms
+
+Use clean form fields
+
+Consistent spacing, typography
+
+🔹 Build Process
+
+Use Gulp for building assets:
+- `npm install` - Install dependencies
+- `gulp build` or `npm run build` - Compile SCSS to CSS and minify JS/CSS
+- `gulp watch` or `npm run watch` - Watch for changes and auto-compile
+
+Block SCSS files are automatically compiled to CSS in the same directory.
+Minified versions are created with .min suffix.

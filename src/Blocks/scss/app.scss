@@ -1,0 +1,8 @@
+/**
+ * NXW Page Builder - Blocks Main SCSS
+ * Uses @use instead of @import (modern Sass syntax)
+ */
+
+@use 'blocks/_blocks-common.scss' as *;
+@use 'blocks/_hero.scss';
+

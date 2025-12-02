@@ -1,0 +1,25 @@
+{
+    "name": "nxw/page-builder",
+    "description": "NXW Page Builder - Modular WordPress Page Builder",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "NXW",
+            "email": "info@example.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "NXW\\PageBuilder\\": "src/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    }
+}
+

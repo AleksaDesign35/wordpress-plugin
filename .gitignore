@@ -1,0 +1,27 @@
+node_modules/
+npm-debug.log
+*.log
+
+# Build outputs
+src/Blocks/app.css
+src/Blocks/app.min.css
+src/Blocks/app.css.map
+src/Blocks/app.min.css.map
+src/Blocks/js/**/*.min.js
+src/Blocks/js/**/*.js.map
+assets/css/admin.min.css
+assets/css/admin.css.map
+assets/css/admin.min.css.map
+assets/js/*.min.js
+assets/js/*.js.map
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
