@@ -47,6 +47,7 @@ nxw-page-builder/
     Blocks/
       BlockInterface.php
       AbstractBlock.php
+      BlockDefaults.php (Default values for all blocks - will be dynamic later)
       scss/
         app.scss (main SCSS file - imports all blocks)
         blocks/
@@ -59,10 +60,10 @@ nxw-page-builder/
       app.css (compiled from SCSS - auto-generated)
       app.min.css (minified - auto-generated)
       {BlockName}/
-         block.json
-         view.php (HTML template - BEM classes, NO TailwindCSS)
-         edit.js (React editor component)
-         save.js
+         block.json (optional - not required)
+         nxw-display-{block-name}-block.php (HTML template - BEM classes, NO TailwindCSS)
+         edit.js (React editor component - optional)
+         save.js (optional)
     Frontend/
       Renderer.php
       BlockLoader.php
@@ -71,6 +72,7 @@ nxw-page-builder/
       ArrayHelper.php
       Sanitizer.php
       TemplateHelper.php
+      BlockHelper.php (Block-specific utilities: buildSectionClasses, buildSectionStyles, etc.)
   assets/
     scss/
       admin.scss
@@ -91,13 +93,54 @@ Always output full file contents and file paths.
 
 Always update Plugin.php when adding new classes.
 
+**Block Display Files Naming:**
+- ALL block display templates MUST use the naming convention: `nxw-display-{block-name}-block.php`
+- Example: `nxw-display-hero-block.php`, `nxw-display-feature-block.php`
+- NEVER use `view.php` - this naming convention is deprecated
+- The system automatically detects blocks by looking for files matching this pattern
+
+**HTML Best Practices for Blocks:**
+- Use semantic HTML5 elements (section, article, header, nav, etc.)
+- Add proper ARIA labels: `aria-label` for sections, `role="presentation"` for decorative images
+- Use proper heading hierarchy (h1, h2, h3, etc.)
+- Include alt text for all images (or empty alt="" with role="presentation" for decorative)
+- Use proper link attributes and focus states
+- Ensure proper document structure and accessibility
+
 Always generate SCSS for each block automatically. Use BEM naming convention (.nxw-block-name__element--modifier).
-Use _blocks-common.scss for shared variables and mixins.
+
+**BEM Naming Rules:**
+- Block: `.nxw-{block-name}` (e.g., `.nxw-feature`, `.nxw-hero`)
+- Element: `__{element-name}` (e.g., `__title`, `__card`, `__icon`)
+- Modifier: `--{modifier-name}` (e.g., `--active`, `--left`, `--hover`)
+- Always use lowercase with hyphens for block and element names
+- Always use lowercase with hyphens for modifier names
+- Example: `.nxw-feature__card--active`, `.nxw-feature__icon--large`
+- NEVER use generic class names like `.box`, `.content`, `.icon` - always use BEM format
+- Each block should be self-contained with its own BEM namespace
+
+**SCSS Best Practices:**
+- Use _blocks-common.scss for shared variables and mixins
+- Organize SCSS with clear sections using comments
+- Use CSS custom properties (var()) with SCSS variable fallbacks
+- Include webkit prefixes for better browser compatibility
+- Use semantic HTML5 elements (section, article, nav, etc.)
+- Add proper ARIA labels and accessibility attributes
+- Use role="presentation" for decorative images
+- Ensure proper focus states for interactive elements
+
 Use Gulp to compile SCSS to CSS and minify JS/CSS.
 
 Always ensure admin UI is consistent and elegant.
 
-Always use helper classes (ArrayHelper, HtmlHelper…) whenever repeated logic is detected.
+Always use helper classes (ArrayHelper, HtmlHelper, BlockHelper…) whenever repeated logic is detected.
+
+**BlockHelper Functions:**
+- `BlockHelper::buildSectionClasses($blockName, $settings, $additionalClasses)` - Build section classes with BEM naming
+- `BlockHelper::buildSectionStyles($settings)` - Build inline styles attribute
+- `BlockHelper::buildSectionAttributes($blockName, $settings, $additionalClasses)` - Build complete section attributes
+- `BlockHelper::getSectionClassSettings($block)` - Get section class settings (compatibility function)
+- Always use BlockHelper for building section classes and styles instead of inline logic
 
 Always ensure scripts/styles load ONLY when needed.
 

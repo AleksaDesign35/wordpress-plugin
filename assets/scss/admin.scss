@@ -312,3 +312,19 @@
     }
 }
 
+// Sidebar Navigation Component
+.nxw-sidebar-nav-item {
+    border: 1px solid transparent;
+    
+    &:hover {
+        text-decoration: none;
+    }
+    
+    &.active,
+    &[data-active="true"] {
+        background-color: #eff6ff;
+        color: #1d4ed8;
+        border-color: #bfdbfe;
+    }
+}
+

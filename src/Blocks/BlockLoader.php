@@ -33,27 +33,35 @@ class BlockLoader
 
         foreach ($blockDirs as $blockDir) {
             $blockName = basename($blockDir);
+            $displayPath = $blockDir . 'nxw-display-' . strtolower($blockName) . '-block.php';
             $blockJsonPath = $blockDir . 'block.json';
 
+            // Register block if nxw-display-{block}-block.php exists (with or without block.json)
+            if (file_exists($displayPath)) {
             if (file_exists($blockJsonPath)) {
+                    // If block.json exists, use it
                 $this->registerBlock($blockName, $blockDir, $blockJsonPath);
+                } else {
+                    // If no block.json, register block manually
+                    $this->registerBlockWithoutJson($blockName, $blockDir);
+                }
             }
         }
     }
 
     /**
-     * Register single block
+     * Register single block with block.json
      */
     private function registerBlock(string $blockName, string $blockDir, string $blockJsonPath): void
     {
         // Register block type
         register_block_type($blockJsonPath, [
             'render_callback' => function($attributes, $content, $block) use ($blockName, $blockDir) {
-                $viewPath = $blockDir . 'view.php';
+                $displayPath = $blockDir . 'nxw-display-' . strtolower($blockName) . '-block.php';
                 
-                if (file_exists($viewPath)) {
+                if (file_exists($displayPath)) {
                     ob_start();
-                    include $viewPath;
+                    include $displayPath;
                     return ob_get_clean();
                 }
                 
@@ -62,6 +70,28 @@ class BlockLoader
         ]);
 
         // Blocks CSS is loaded globally in enqueueBlockAssets
+    }
+
+    /**
+     * Register block without block.json file
+     */
+    private function registerBlockWithoutJson(string $blockName, string $blockDir): void
+    {
+        $blockSlug = 'nxw-page-builder/' . strtolower($blockName);
+        
+        register_block_type($blockSlug, [
+            'render_callback' => function($attributes, $content, $block) use ($blockName, $blockDir) {
+                $displayPath = $blockDir . 'nxw-display-' . strtolower($blockName) . '-block.php';
+                
+                if (file_exists($displayPath)) {
+                    ob_start();
+                    include $displayPath;
+                    return ob_get_clean();
+                }
+                
+                return '';
+            },
+        ]);
     }
 
     /**

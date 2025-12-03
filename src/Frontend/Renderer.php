@@ -89,18 +89,19 @@ class Renderer
             return '';
         }
 
-        // Get block view template path
+        // Get block display template path
         $blockPath = $blockData['path'];
-        $viewPath = $blockPath . 'view.php';
+        $blockName = $blockData['name'];
+        $displayPath = $blockPath . 'nxw-display-' . strtolower($blockName) . '-block.php';
 
-        if (!file_exists($viewPath)) {
+        if (!file_exists($displayPath)) {
             return '';
         }
 
         // Render block view
         ob_start();
         $attributes = $blockAttributes; // Make attributes available to view template
-        include $viewPath;
+        include $displayPath;
         return ob_get_clean();
     }
 

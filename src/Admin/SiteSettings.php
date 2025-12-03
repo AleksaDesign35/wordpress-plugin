@@ -17,6 +17,7 @@ class SiteSettings
      * Default settings (stored in rem for best practices)
      */
     private const DEFAULT_SETTINGS = [
+        'default_font_size' => '16', // Base font size in px
         'site_width' => '75rem', // 1200px / 16 = 75rem
         'padding_left' => '1rem', // 16px / 16 = 1rem
         'padding_right' => '1rem', // 16px / 16 = 1rem
@@ -27,58 +28,53 @@ class SiteSettings
      */
     public function init(): void
     {
-        add_action('admin_menu', [$this, 'addSettingsPage']);
+        // Menu is added by AdminPage class to avoid duplication
         add_action('wp_head', [$this, 'outputInlineCSS'], 999);
         add_action('template_redirect', [$this, 'bypassThemeForPageBuilder'], 1);
     }
 
     /**
-     * Add settings page to admin menu
+     * Get default font size in pixels
+     * 
+     * @return int Font size in pixels
      */
-    public function addSettingsPage(): void
+    private function getDefaultFontSize(): int
     {
-        // Remove any existing menu items with same slug to avoid duplicates
-        remove_submenu_page('nxw-page-builder', 'nxw-page-builder-settings');
-        
-        // Use the same callback as other admin pages to avoid duplicate rendering
-        // This ensures PageDispatcher is only initialized once
-        $adminPage = new \NXW\PageBuilder\Admin\AdminPage();
-        add_submenu_page(
-            'nxw-page-builder',
-            __('Site Settings', 'nxw-page-builder'),
-            __('Site Settings', 'nxw-page-builder'),
-            'manage_options',
-            'nxw-page-builder-settings',
-            [$adminPage, 'renderAdminPage']
-        );
+        $settings = $this->getSettings();
+        $fontSize = isset($settings['default_font_size']) ? (int) $settings['default_font_size'] : 16;
+        return $fontSize > 0 ? $fontSize : 16;
     }
 
     /**
-     * Convert px to rem (assuming 16px = 1rem)
+     * Convert px to rem using current default font size
      * 
      * @param string $value Value with unit (e.g., "1200px" or "75rem")
+     * @param int|null $fontSize Optional font size (uses default if not provided)
      * @return string Value in rem format
      */
-    private function convertToRem(string $value): string
+    private function convertToRem(string $value, ?int $fontSize = null): string
     {
         $value = trim($value);
+        if ($fontSize === null) {
+            $fontSize = $this->getDefaultFontSize();
+        }
         
         // If already in rem, return as is
         if (preg_match('/^[\d.]+rem$/i', $value)) {
             return $value;
         }
         
-        // If in px, convert to rem (16px = 1rem)
+        // If in px, convert to rem using current font size
         if (preg_match('/^([\d.]+)px$/i', $value, $matches)) {
             $pxValue = (float) $matches[1];
-            $remValue = $pxValue / 16;
+            $remValue = $pxValue / $fontSize;
             return number_format($remValue, 3, '.', '') . 'rem';
         }
         
         // If just a number, assume px and convert
         if (preg_match('/^[\d.]+$/', $value)) {
             $pxValue = (float) $value;
-            $remValue = $pxValue / 16;
+            $remValue = $pxValue / $fontSize;
             return number_format($remValue, 3, '.', '') . 'rem';
         }
         
@@ -87,31 +83,99 @@ class SiteSettings
     }
 
     /**
+     * Convert rem to px using current default font size
+     * 
+     * @param string $value Value in rem format (e.g., "75rem")
+     * @return string Value in px format (e.g., "1200px")
+     */
+    private function convertRemToPx(string $value): string
+    {
+        $value = trim($value);
+        $fontSize = $this->getDefaultFontSize();
+        
+        // If in rem, convert to px using current font size
+        if (preg_match('/^([\d.]+)rem$/i', $value, $matches)) {
+            $remValue = (float) $matches[1];
+            $pxValue = $remValue * $fontSize;
+            return number_format($pxValue, 0, '.', '') . 'px';
+        }
+        
+        // If already in px, return as is
+        if (preg_match('/^[\d.]+px$/i', $value)) {
+            return $value;
+        }
+        
+        // If just a number, assume it's px
+        if (preg_match('/^[\d.]+$/', $value)) {
+            return $value . 'px';
+        }
+        
+        // If invalid format, return default px value
+        return $fontSize . 'px';
+    }
+
+    /**
      * Save settings (public for use by PageDispatcher)
      */
     public function saveSettings(): void
     {
-        // Get values and convert px to rem
-        $siteWidth = isset($_POST['site_width']) 
-            ? sanitize_text_field($_POST['site_width']) 
-            : self::DEFAULT_SETTINGS['site_width'];
-        $siteWidth = $this->convertToRem($siteWidth);
+        // Get default font size first (needed for conversions)
+        $defaultFontSize = isset($_POST['default_font_size']) 
+            ? (int) sanitize_text_field($_POST['default_font_size']) 
+            : self::DEFAULT_SETTINGS['default_font_size'];
+        
+        // Validate font size
+        if ($defaultFontSize < 10 || $defaultFontSize > 30) {
+            $defaultFontSize = self::DEFAULT_SETTINGS['default_font_size'];
+        }
 
-        $paddingLeft = isset($_POST['padding_left']) 
-            ? sanitize_text_field($_POST['padding_left']) 
-            : self::DEFAULT_SETTINGS['padding_left'];
-        $paddingLeft = $this->convertToRem($paddingLeft);
+        // Get current settings to check if font size changed
+        $currentSettings = $this->getSettings();
+        $fontSizeChanged = isset($currentSettings['default_font_size']) && 
+                          (int)$currentSettings['default_font_size'] !== $defaultFontSize;
 
-        $paddingRight = isset($_POST['padding_right']) 
-            ? sanitize_text_field($_POST['padding_right']) 
-            : self::DEFAULT_SETTINGS['padding_right'];
-        $paddingRight = $this->convertToRem($paddingRight);
-
+        // Save font size first (needed for conversions)
         $settings = [
-            'site_width' => $siteWidth,
-            'padding_left' => $paddingLeft,
-            'padding_right' => $paddingRight,
+            'default_font_size' => (string) $defaultFontSize,
         ];
+
+        // If font size changed, we need to recalculate all rem values
+        if ($fontSizeChanged) {
+            // Get existing rem values and recalculate based on new font size
+            $oldFontSize = isset($currentSettings['default_font_size']) 
+                ? (int) $currentSettings['default_font_size'] 
+                : 16;
+            
+            // Recalculate existing rem values to new base
+            foreach (['site_width', 'padding_left', 'padding_right'] as $key) {
+                if (isset($currentSettings[$key]) && preg_match('/^([\d.]+)rem$/i', $currentSettings[$key], $matches)) {
+                    $oldRemValue = (float) $matches[1];
+                    // Convert old rem to px using old font size
+                    $pxValue = $oldRemValue * $oldFontSize;
+                    // Convert px to rem using new font size
+                    $newRemValue = $pxValue / $defaultFontSize;
+                    $settings[$key] = number_format($newRemValue, 3, '.', '') . 'rem';
+                } else {
+                    $settings[$key] = $currentSettings[$key] ?? self::DEFAULT_SETTINGS[$key];
+                }
+            }
+        } else {
+            // Font size didn't change, just convert new values using current font size
+            $siteWidth = isset($_POST['site_width']) 
+                ? sanitize_text_field($_POST['site_width']) 
+                : ($currentSettings['site_width'] ?? self::DEFAULT_SETTINGS['site_width']);
+            $settings['site_width'] = $this->convertToRem($siteWidth, $defaultFontSize);
+
+            $paddingLeft = isset($_POST['padding_left']) 
+                ? sanitize_text_field($_POST['padding_left']) 
+                : ($currentSettings['padding_left'] ?? self::DEFAULT_SETTINGS['padding_left']);
+            $settings['padding_left'] = $this->convertToRem($paddingLeft, $defaultFontSize);
+
+            $paddingRight = isset($_POST['padding_right']) 
+                ? sanitize_text_field($_POST['padding_right']) 
+                : ($currentSettings['padding_right'] ?? self::DEFAULT_SETTINGS['padding_right']);
+            $settings['padding_right'] = $this->convertToRem($paddingRight, $defaultFontSize);
+        }
 
         update_option(self::OPTION_KEY, $settings);
     }
@@ -161,6 +225,28 @@ class SiteSettings
     {
         $settings = $this->getSettings();
         return $settings[$key] ?? $default;
+    }
+
+    /**
+     * Get settings with px values for display
+     * 
+     * @return array Settings array with px values added
+     */
+    public function getSettingsForDisplay(): array
+    {
+        $settings = $this->getSettings();
+        
+        // Add px values for display
+        $settings['site_width_px'] = $this->convertRemToPx($settings['site_width']);
+        $settings['padding_left_px'] = $this->convertRemToPx($settings['padding_left']);
+        $settings['padding_right_px'] = $this->convertRemToPx($settings['padding_right']);
+        
+        // Also keep rem values for hidden fields
+        $settings['site_width_rem'] = $settings['site_width'];
+        $settings['padding_left_rem'] = $settings['padding_left'];
+        $settings['padding_right_rem'] = $settings['padding_right'];
+        
+        return $settings;
     }
 
     /**

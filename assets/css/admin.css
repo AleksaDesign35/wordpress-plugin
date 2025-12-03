@@ -253,4 +253,16 @@
 #nxw-block-preview-modal #nxw-attributes-list .font-mono {
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
 }
+
+.nxw-sidebar-nav-item {
+  border: 1px solid transparent;
+}
+.nxw-sidebar-nav-item:hover {
+  text-decoration: none;
+}
+.nxw-sidebar-nav-item.active, .nxw-sidebar-nav-item[data-active=true] {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  border-color: #bfdbfe;
+}
 /*# sourceMappingURL=admin.css.map */

@@ -28,65 +28,7 @@ $nxw-color-bg-white: #ffffff;
 
 // Global container class - applies to all pages using page builder
 .container {
-    width: var(--site-width);
     margin: 0 auto;
-    padding-left: var(--nxw-padding-left, #{$nxw-container-padding-default});
-    padding-right: var(--nxw-padding-right, #{$nxw-container-padding-default});
+    padding: 0 20px;
+    max-width: 1400px;
 }
-
-// Mixins
-@mixin nxw-container {
-    width: 100%;
-    // Use CSS custom property with fallback to SCSS variable
-    max-width: var(--site-width, #{$nxw-container-width-default});
-    margin: 0 auto;
-    // Use CSS custom properties for padding with fallbacks
-    padding-left: var(--nxw-padding-left, #{$nxw-container-padding-default});
-    padding-right: var(--nxw-padding-right, #{$nxw-container-padding-default});
-
-    @media (min-width: $nxw-breakpoint-sm) {
-        padding-left: calc(var(--nxw-padding-left, #{$nxw-container-padding-default}) * 1.5);
-        padding-right: calc(var(--nxw-padding-right, #{$nxw-container-padding-default}) * 1.5);
-    }
-
-    @media (min-width: $nxw-breakpoint-lg) {
-        padding-left: calc(var(--nxw-padding-left, #{$nxw-container-padding-default}) * 2);
-        padding-right: calc(var(--nxw-padding-right, #{$nxw-container-padding-default}) * 2);
-    }
-}
-
-@mixin nxw-button-base {
-    display: inline-block;
-    padding: 0.75rem 2rem;
-    font-size: 1.125rem;
-    font-weight: 600;
-    text-decoration: none;
-    border-radius: 0.5rem;
-    transition: all 0.3s ease;
-    border: none;
-    cursor: pointer;
-}
-
-@mixin nxw-button-hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-@mixin nxw-responsive-font($mobile, $tablet, $desktop) {
-    font-size: $mobile;
-
-    @media (min-width: $nxw-breakpoint-md) {
-        font-size: $tablet;
-    }
-
-    @media (min-width: $nxw-breakpoint-lg) {
-        font-size: $desktop;
-    }
-}
-
-// Block wrapper base class
-.nxw-block {
-    position: relative;
-    width: 100%;
-}
-

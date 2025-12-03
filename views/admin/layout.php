@@ -24,9 +24,13 @@ declare(strict_types=1);
         </div>
 
         <!-- Content -->
-        <div class="bg-white shadow-sm rounded-xl border border-gray-200 overflow-hidden">
+        <?php if (isset($noWrapper) && $noWrapper): ?>
             <?php echo $content; // Already escaped in views ?>
-        </div>
+        <?php else: ?>
+            <div class="bg-white shadow-sm rounded-xl border border-gray-200 overflow-hidden">
+                <?php echo $content; // Already escaped in views ?>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
 

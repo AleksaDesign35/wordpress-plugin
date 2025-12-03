@@ -1,63 +1,70 @@
 {
-  "$schema": "https://schemas.wp.org/trunk/block.json",
-  "apiVersion": 3,
-  "name": "nxw-page-builder/hero",
-  "title": "Hero",
-  "category": "layout",
-  "icon": "superhero",
-  "description": "A hero section with title, subtitle, and call-to-action button",
-  "keywords": ["hero", "banner", "header", "cta"],
-  "textdomain": "nxw-page-builder",
-  "render": "file:./view.php",
-  "attributes": {
-    "title": {
-      "type": "string",
-      "default": "Welcome to Our Website"
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "nxw-page-builder/hero",
+    "title": "Hero",
+    "category": "layout",
+    "icon": "superhero",
+    "description": "A hero section with title, subtitle, and call-to-action button",
+    "keywords": [
+        "hero",
+        "banner",
+        "header",
+        "cta"
+    ],
+    "textdomain": "nxw-page-builder",
+    "render": "file:./nxw-display-hero-block.php",
+    "attributes": {
+        "title": {
+            "type": "string",
+            "default": "Welcome to Our Website"
+        },
+        "subtitle": {
+            "type": "string",
+            "default": "Create amazing experiences with our page builder"
+        },
+        "buttonText": {
+            "type": "string",
+            "default": "Get Started"
+        },
+        "buttonLink": {
+            "type": "string",
+            "default": "#"
+        },
+        "backgroundImage": {
+            "type": "string",
+            "default": ""
+        },
+        "backgroundColor": {
+            "type": "string",
+            "default": "#3b82f6"
+        },
+        "textColor": {
+            "type": "string",
+            "default": "#ffffff"
+        },
+        "alignment": {
+            "type": "string",
+            "default": "center"
+        },
+        "padding": {
+            "type": "string",
+            "default": "large"
+        }
     },
-    "subtitle": {
-      "type": "string",
-      "default": "Create amazing experiences with our page builder"
-    },
-    "buttonText": {
-      "type": "string",
-      "default": "Get Started"
-    },
-    "buttonLink": {
-      "type": "string",
-      "default": "#"
-    },
-    "backgroundImage": {
-      "type": "string",
-      "default": ""
-    },
-    "backgroundColor": {
-      "type": "string",
-      "default": "#3b82f6"
-    },
-    "textColor": {
-      "type": "string",
-      "default": "#ffffff"
-    },
-    "alignment": {
-      "type": "string",
-      "default": "center"
-    },
-    "padding": {
-      "type": "string",
-      "default": "large"
+    "supports": {
+        "html": false,
+        "align": [
+            "wide",
+            "full"
+        ],
+        "spacing": {
+            "padding": true,
+            "margin": true
+        },
+        "color": {
+            "background": true,
+            "text": true
+        }
     }
-  },
-  "supports": {
-    "html": false,
-    "align": ["wide", "full"],
-    "spacing": {
-      "padding": true,
-      "margin": true
-    },
-    "color": {
-      "background": true,
-      "text": true
-    }
-  }
 }
-

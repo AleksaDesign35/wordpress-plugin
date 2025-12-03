@@ -82,7 +82,15 @@ class AdminPage
             [$this, 'renderAdminPage']
         );
 
-        // Site Settings is added by SiteSettings class
+        // Site Settings submenu
+        add_submenu_page(
+            'nxw-page-builder',
+            __('Site Settings', 'nxw-page-builder'),
+            __('Site Settings', 'nxw-page-builder'),
+            'manage_options',
+            'nxw-page-builder-settings',
+            [$this, 'renderAdminPage']
+        );
     }
 
     /**

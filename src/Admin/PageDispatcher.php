@@ -333,20 +333,36 @@ class PageDispatcher
      */
     private function renderSiteSettings(): void
     {
-        $settings = $this->getSiteSettings()->getSettings();
+        $settings = $this->getSiteSettings()->getSettingsForDisplay();
         
         // Get active tab from query string or default to 'layout'
         $activeTab = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 'layout';
         
-        // Render with layout, passing settings and activeTab to the view
-        TemplateHelper::render('admin/layout', [
-            'title' => __('Site Settings', 'nxw-page-builder'),
-            'subtitle' => __('Configure global settings that apply to all pages using the page builder.', 'nxw-page-builder'),
-            'content' => TemplateHelper::render('admin/site-settings', [
-                'settings' => $settings,
-                'activeTab' => $activeTab,
-            ], true),
-        ]);
+        // Render Site Settings with custom layout (includes sidebar and header)
+        // Don't use standard layout wrapper as Site Settings has its own full layout
+        ?>
+        <div class="nxw-page-builder-wrap">
+            <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <!-- Header -->
+                <div class="mb-8">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h1 class="text-3xl font-bold text-gray-900 tracking-tight"><?php echo esc_html(__('Site Settings', 'nxw-page-builder')); ?></h1>
+                            <p class="mt-2 text-sm text-gray-500"><?php echo esc_html(__('Configure global settings that apply to all pages using the page builder.', 'nxw-page-builder')); ?></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Site Settings Content (with sidebar) -->
+                <?php
+                TemplateHelper::render('admin/site-settings', [
+                    'settings' => $settings,
+                    'activeTab' => $activeTab,
+                ]);
+                ?>
+            </div>
+        </div>
+        <?php
     }
 }
 

@@ -37,7 +37,14 @@ class BlocksManager
         foreach ($blockDirs as $blockDir) {
             $blockName = basename($blockDir);
             $blockJsonPath = $blockDir . 'block.json';
+            $displayPath = $blockDir . 'nxw-display-' . strtolower($blockName) . '-block.php';
 
+            // Block must have nxw-display-{block}-block.php to be valid
+            if (!file_exists($displayPath)) {
+                continue;
+            }
+
+            // If block.json exists, use it
             if (file_exists($blockJsonPath)) {
                 $blockData = json_decode(file_get_contents($blockJsonPath), true);
                 if ($blockData) {
@@ -53,6 +60,19 @@ class BlocksManager
                         'path' => $blockDir,
                     ];
                 }
+            } else {
+                // Block without JSON - use defaults
+                $blocks[] = [
+                    'name' => $blockName,
+                    'title' => ucfirst($blockName),
+                    'description' => '',
+                    'category' => 'common',
+                    'icon' => 'block-default',
+                    'keywords' => [],
+                    'supports' => [],
+                    'attributes' => [],
+                    'path' => $blockDir,
+                ];
             }
         }
 
@@ -68,12 +88,16 @@ class BlocksManager
     public function getBlock(string $blockName): ?array
     {
         $blockDir = $this->blocksDir . $blockName . '/';
+        $displayPath = $blockDir . 'nxw-display-' . strtolower($blockName) . '-block.php';
         $blockJsonPath = $blockDir . 'block.json';
 
-        if (!file_exists($blockJsonPath)) {
+        // Block must have nxw-display-{block}-block.php
+        if (!file_exists($displayPath)) {
             return null;
         }
 
+        // If block.json exists, use it
+        if (file_exists($blockJsonPath)) {
         $blockData = json_decode(file_get_contents($blockJsonPath), true);
         if (!$blockData) {
             return null;
@@ -88,6 +112,20 @@ class BlocksManager
             'keywords' => $blockData['keywords'] ?? [],
             'supports' => $blockData['supports'] ?? [],
             'attributes' => $blockData['attributes'] ?? [],
+                'path' => $blockDir,
+            ];
+        }
+
+        // Block without JSON - return defaults
+        return [
+            'name' => $blockName,
+            'title' => ucfirst($blockName),
+            'description' => '',
+            'category' => 'common',
+            'icon' => 'block-default',
+            'keywords' => [],
+            'supports' => [],
+            'attributes' => [],
             'path' => $blockDir,
         ];
     }
@@ -127,9 +165,9 @@ class BlocksManager
             return '';
         }
 
-        $viewPath = $blockData['path'] . 'view.php';
+        $displayPath = $blockData['path'] . 'nxw-display-' . strtolower($blockName) . '-block.php';
         
-        if (!file_exists($viewPath)) {
+        if (!file_exists($displayPath)) {
             return '';
         }
 
@@ -146,7 +184,7 @@ class BlocksManager
         // Render block with default attributes
         ob_start();
         $attributes = $defaultAttributes;
-        include $viewPath;
+        include $displayPath;
         return ob_get_clean();
     }
 
